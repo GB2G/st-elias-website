@@ -1,0 +1,22 @@
+{
+  "name": "st-elias-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "daily": "node scripts/fetch-thought.mjs",
+    "prebuild": "npm run daily || echo \"daily fetch failed, keeping last copy\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "playwright": "^1.64.1",
+    "vite": "^6.0.0"
+  }
+}

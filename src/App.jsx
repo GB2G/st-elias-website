@@ -6,6 +6,8 @@ import Leaders from "./pages/Leaders.jsx";
 import ChurchSchool from "./pages/ChurchSchool.jsx";
 import Sacraments from "./pages/Sacraments.jsx";
 import Donations from "./pages/Donations.jsx";
+import Give from "./pages/Give.jsx";
+import Readings from "./pages/Readings.jsx";
 import Contact from "./pages/Contact.jsx";
 import Subscribe from "./pages/Subscribe.jsx";
 import { Events, EventDetail } from "./pages/Events.jsx";
@@ -23,6 +25,9 @@ export default function App() {
         <Route path="church-school" element={<ChurchSchool />} />
         <Route path="sacraments-forms" element={<Sacraments />} />
         <Route path="contributions-donations" element={<Donations />} />
+        <Route path="contribution" element={<Give kind="contribution" />} />
+        <Route path="donation" element={<Give kind="donation" />} />
+        <Route path="readings" element={<Readings />} />
         <Route path="contact" element={<Contact />} />
         <Route path="subscribe" element={<Subscribe />} />
         <Route path="events" element={<Events />} />

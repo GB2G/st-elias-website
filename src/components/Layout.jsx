@@ -7,10 +7,13 @@ const about = [
   ["/the-orthodox-faith", "The Orthodox Faith"],
   ["/church-school", "Church School"],
 ];
-const main = [
+const parish = [
   ["/events", "Events"],
+  ["/readings", "Today's Readings"],
   ["/sacraments-forms", "Sacraments & Forms"],
   ["/beehive", "Beehive"],
+];
+const main = [
   ["/contact", "Contact"],
   ["/subscribe", "Subscribe"],
 ];
@@ -35,14 +38,16 @@ export default function Layout() {
             {open ? "Close" : "Menu"}
           </button>
           <nav className={open ? "open" : ""}>
-            <div className="dropdown">
-              <span>About Us ▾</span>
-              <div className="dropdown-menu">
-                {about.map(([to, label]) => (
-                  <NavLink key={to} to={to}>{label}</NavLink>
-                ))}
+            {[["About Us", about], ["Parish Life", parish]].map(([label, items]) => (
+              <div key={label} className="dropdown">
+                <span>{label} ▾</span>
+                <div className="dropdown-menu">
+                  {items.map(([to, text]) => (
+                    <NavLink key={to} to={to}>{text}</NavLink>
+                  ))}
+                </div>
               </div>
-            </div>
+            ))}
             {main.map(([to, label]) => (
               <NavLink key={to} to={to}>{label}</NavLink>
             ))}

@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "daily": "node scripts/fetch-thought.mjs",
-    "prebuild": "npm run daily || echo \"daily fetch failed, keeping last copy\"",
+    "thought": "node scripts/fetch-thought.mjs",
+    "planner": "node scripts/build-planner.mjs",
+    "prebuild": "npm run thought || echo \"thought fetch failed, keeping last copy\"",
     "build": "vite build",
     "preview": "vite preview"
   },

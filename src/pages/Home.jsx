@@ -2,18 +2,25 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { events } from "../data/events.js";
 
-// Mirrored from antiochian.org by scripts/fetch-thought.mjs
-function useDaily() {
-  const [daily, setDaily] = useState({ thought: { quote: "", author: "" } });
+function useJson(url) {
+  const [data, setData] = useState(null);
   useEffect(() => {
-    fetch("/daily.json").then((r) => r.json()).then(setDaily).catch(() => {});
-  }, []);
-  return daily;
+    fetch(url).then((r) => r.json()).then(setData).catch(() => {});
+  }, [url]);
+  return data;
 }
 
+// Today in Ottawa, as YYYY-MM-DD (the planner is keyed by date)
+const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
+const longDate = (iso) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString("en-CA", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
 export default function Home() {
-  const daily = useDaily();
-  const { thought } = daily;
+  // Saints, readings and fasting: public/planner.json (scripts/build-planner.mjs)
+  // Thought for the Day: public/thought.json (scripts/fetch-thought.mjs, from antiochian.org)
+  const iso = today();
+  const day = useJson("/planner.json")?.[iso];
+  const thought = useJson("/thought.json") ?? { quote: "", author: "" };
   return (
     <>
       <section className="hero">
@@ -39,8 +46,8 @@ export default function Home() {
       <section className="thought">
         <div className="wrap">
           <p className="eyebrow">Thought of the Day</p>
-          <blockquote>“{thought.quote}”</blockquote>
-          <cite>{thought.author}</cite>
+          <blockquote>{thought.quote.includes("“") ? thought.quote : `“${thought.quote}”`}</blockquote>
+          {thought.author && <cite>{thought.author}</cite>}
         </div>
       </section>
 
@@ -49,6 +56,7 @@ export default function Home() {
           <p className="eyebrow">Schedule &amp; Activities</p>
           <h2>Upcoming events</h2>
           <p className="lead">Join us for worship, fellowship and festivals through the season.</p>
+          <img className="rounded cal" src="/img/events/calendar.jpg" alt="October 2026 parish calendar" />
           <div className="grid cols3">
             {events.map((e) => (
               <Link key={e.slug} className="card" to={`/event/${e.slug}`}>
@@ -74,21 +82,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="reading">
-        <div className="wrap split">
-          <img src="/img/icon-peter-paul.jpg" alt="Icon of Saints Peter and Paul holding the Church of Antioch" width="500" height="367" />
-          <div>
-            <p className="eyebrow">Daily Reading</p>
-            {daily.feast && (
-              <>
-                <h2>{daily.feast}</h2>
-                <p className="lead flush">{daily.date}<br />{daily.epistle}<br />{daily.gospel}</p>
-                {daily.fast && <span className="pill">Fast: {daily.fast}</span>}
-              </>
-            )}
+      {day && (
+        <section className="reading">
+          <div className="wrap split">
+            <img src="/img/icon-peter-paul.jpg" alt="Icon of Saints Peter and Paul holding the Church of Antioch" width="500" height="367" />
+            <div>
+              <p className="eyebrow">Daily Reading · {longDate(iso)}</p>
+              <h2>{day.title}</h2>
+              <p className="lead flush">
+                {day.matinsGospel && <>Matins Gospel: {day.matinsGospel}<br /></>}
+                {day.oldTestament.map((r) => <span key={r}>Old Testament: {r}<br /></span>)}
+                {day.epistle && <>Epistle: {day.epistle}<br /></>}
+                {day.gospel && <>Gospel: {day.gospel}</>}
+              </p>
+              {day.saints.length > 1 && <p className="saints">Also commemorated: {day.saints.slice(1).join("; ")}</p>}
+              {day.fast && <span className="pill">{day.fast}</span>}
+              <p className="more"><Link to="/readings">Read today's readings →</Link></p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section>
         <div className="wrap">

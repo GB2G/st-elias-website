@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero.jsx";
 
 export default function Donations() {
@@ -15,8 +16,8 @@ export default function Donations() {
             for years to come.
           </p>
           <p className="actions-left">
-            <a className="btn" href="https://steliascathedral.com/contribution">Set up recurring giving</a>
-            <a className="btn outline" href="https://steliascathedral.com/donation">Make a one-time donation</a>
+            <Link className="btn" to="/contribution">Set up recurring giving</Link>
+            <Link className="btn outline" to="/donation">Make a one-time donation</Link>
           </p>
           <p>
             To cancel a recurring donation, email <a href="mailto:info@steliascathedral.com">info@steliascathedral.com</a>.
